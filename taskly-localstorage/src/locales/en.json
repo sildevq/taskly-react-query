@@ -7,6 +7,7 @@
     "title": "My tasks",
     "new": "New task",
     "dueDate": "Due Date",
+    "empty": "No tasks yet.",
     "filters": {
       "all": "All",
       "active": "Active",
@@ -19,10 +20,12 @@
       "title": "Edit Task"
     },
     "form": {
-      "taskTitle": "Task Title",
-      "placeholder": "e.g. Design the new dashboard",
+      "title": "Task Title",
+      "titlePlaceholder": "e.g. Design the new dashboard",
       "dueDate": "Due Date",
       "pickDate": "Pick a date",
+      "description": "Description",
+      "descriptionPlaceholder": "e.g., Task details or important notes",
       "priority": "Priority",
       "priorities": {
         "none": "No priority",
@@ -39,7 +42,8 @@
     "dueDate": "Due Date",
     "edit": "Edit",
     "delete": "Delete",
-    "description": "Description"
+    "description": "Description",
+    "emptyDescription": "No description"
   },
   "settings": {
     "title": "Settings",

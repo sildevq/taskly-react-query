@@ -1,8 +1,13 @@
 import TaskForm from "@/components/task-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { TaskType } from "@/types";
 import { useTranslation } from "react-i18next";
 
-const NewTask = () => {
+interface NewTaskProps {
+  onCreate: (data: Omit<TaskType, "id" | "completed">) => void;
+}
+
+const NewTask = ({ onCreate }: NewTaskProps) => {
   const { t } = useTranslation();
 
   return (
@@ -13,7 +18,7 @@ const NewTask = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <TaskForm onSubmit={() => {}} />
+        <TaskForm onSubmit={onCreate} submitLabelKey="tasks.form.create" />
       </CardContent>
     </Card>
   );

@@ -11,72 +11,77 @@ import {
 } from "./ui/pagination";
 import { useTranslation } from "react-i18next";
 import TaskItem from "./task-item";
+import type { TaskType } from "@/types";
 
 type Filter = "all" | "active" | "completed";
+const filters: { value: Filter; labelKey: string }[] = [
+  { value: "all", labelKey: "tasks.filters.all" },
+  { value: "active", labelKey: "tasks.filters.active" },
+  { value: "completed", labelKey: "tasks.filters.completed" },
+];
 
 const TASKS_PER_PAGE = 5;
 
-const TaskList = () => {
+interface TaskListProps {
+  tasks: TaskType[];
+  onDelete: (id: string) => void;
+  setTaskCompletion: (id: string, completed: boolean) => void;
+}
+
+const TaskList = ({ tasks, onDelete, setTaskCompletion }: TaskListProps) => {
   const { t } = useTranslation();
 
-  const [currentPage, setCurrentPage] = useState(1);
   const [activeFilter, setActiveFilter] = useState<Filter>("all");
-  // const [allTasks, setAllTasks] = useState(tasksData);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const filters: { label: string; value: Filter }[] = [
-    { label: t("tasks.filters.all"), value: "all" },
-    { label: t("tasks.filters.active"), value: "active" },
-    { label: t("tasks.filters.completed"), value: "completed" },
-  ];
+  const filteredTasks = tasks.filter((task) => {
+    if (activeFilter === "all") return true;
+    if (activeFilter === "active") return !task.completed;
+    if (activeFilter === "completed") return task.completed;
+    return true;
+  });
 
-  // const filteredTasks = allTasks.filter((task) => {
-  //   if (activeFilter === "all") return true;
-  //   if (activeFilter === "active") return !task.completed;
-  //   if (activeFilter === "completed") return task.completed;
-  //   return true;
-  // });
+  const totalPages = Math.ceil(filteredTasks.length / TASKS_PER_PAGE);
+  const paginatedTasks = filteredTasks.slice(
+    (currentPage - 1) * TASKS_PER_PAGE,
+    currentPage * TASKS_PER_PAGE
+  );
 
-  // const totalPages = Math.ceil(filteredTasks.length / TASKS_PER_PAGE);
-  // const paginatedTasks = filteredTasks.slice(
-  //   (currentPage - 1) * TASKS_PER_PAGE,
-  //   currentPage * TASKS_PER_PAGE
-  // );
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
-  // const handlePageChange = (page: number) => {
-  //   if (page >= 1 && page <= totalPages) {
-  //     setCurrentPage(page);
-  //   }
-  // };
+  const getVisiblePages = () => {
+    const pages: (number | string)[] = [];
+    const delta = 1; // сколько страниц показывать вокруг текущей
 
-  // const getVisiblePages = () => {
-  //   const pages: (number | string)[] = [];
-  //   const delta = 1; // сколько страниц показывать вокруг текущей
+    const left = Math.max(2, currentPage - delta);
+    const right = Math.min(totalPages - 1, currentPage + delta);
 
-  //   const left = Math.max(2, currentPage - delta);
-  //   const right = Math.min(totalPages - 1, currentPage + delta);
+    pages.push(1);
 
-  //   pages.push(1);
+    if (left > 2) {
+      pages.push("ellipsis-left");
+    }
 
-  //   if (left > 2) {
-  //     pages.push("ellipsis-left");
-  //   }
+    for (let i = left; i <= right; i++) {
+      pages.push(i);
+    }
 
-  //   for (let i = left; i <= right; i++) {
-  //     pages.push(i);
-  //   }
+    if (right < totalPages - 1) {
+      pages.push("ellipsis-right");
+    }
 
-  //   if (right < totalPages - 1) {
-  //     pages.push("ellipsis-right");
-  //   }
+    if (totalPages > 1) {
+      pages.push(totalPages);
+    }
 
-  //   if (totalPages > 1) {
-  //     pages.push(totalPages);
-  //   }
+    return pages;
+  };
 
-  //   return pages;
-  // };
-
-  // const visiblePages = getVisiblePages();
+  const visiblePages = getVisiblePages();
 
   return (
     <>
@@ -84,7 +89,7 @@ const TaskList = () => {
         {filters.map((filter) => (
           <Tab
             key={filter.value}
-            label={filter.label}
+            label={t(filter.labelKey)}
             isActive={activeFilter === filter.value}
             onClick={() => {
               setActiveFilter(filter.value);
@@ -95,9 +100,23 @@ const TaskList = () => {
       </div>
       <div className="mt-7">
         <div className="space-y-3">
-          {paginatedTasks.slice(0, 5).map((task) => (
-            <TaskItem {...task} onDelete={() => {}} />
-          ))}
+          {paginatedTasks.length > 0 ? (
+            paginatedTasks
+              .slice(0, 5)
+              .map((task) => (
+                <TaskItem
+                  {...task}
+                  onDelete={onDelete}
+                  setTaskCompletion={setTaskCompletion}
+                />
+              ))
+          ) : (
+            <div className="">
+              <span className="text-xl text-muted-foreground ">
+                {t("tasks.empty")} :(
+              </span>
+            </div>
+          )}
         </div>
         {totalPages > 1 && (
           <Pagination className="mt-8">

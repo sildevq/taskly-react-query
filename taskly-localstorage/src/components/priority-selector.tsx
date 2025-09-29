@@ -1,7 +1,7 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import type { Priority } from "@/types";
 
 const priorities = [
   { value: "none", labelKey: "tasks.form.priorities.none" },
@@ -10,14 +10,18 @@ const priorities = [
   { value: "high", labelKey: "tasks.form.priorities.high" },
 ];
 
-const PrioritySelector = () => {
-  const [priority, setPriority] = useState("none");
+interface PrioritySelectorProps {
+  value: Priority;
+  onChange: (value: Priority) => void;
+}
+
+const PrioritySelector = ({ value, onChange }: PrioritySelectorProps) => {
   const { t } = useTranslation();
 
   return (
     <RadioGroup
-      value={priority}
-      onValueChange={setPriority}
+      value={value}
+      onValueChange={onChange}
       className="w-full grid sm:grid-cols-2 lg:grid-cols-4 gap-2"
     >
       {priorities.map((item) => (
@@ -25,7 +29,7 @@ const PrioritySelector = () => {
           key={item.value}
           htmlFor={item.value}
           className={`cursor-pointer flex-1 justify-center py-5 rounded-lg border transition ${
-            priority === item.value ? "border-primary bg-primary/10" : "border"
+            value === item.value ? "border-primary bg-primary/10" : "border"
           }`}
         >
           <RadioGroupItem

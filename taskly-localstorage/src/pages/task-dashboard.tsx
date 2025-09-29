@@ -1,10 +1,21 @@
 import TaskList from "@/components/task-list";
 import { Button } from "@/components/ui/button";
+import type { TaskType } from "@/types";
 import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-const TaskDashboard = () => {
+interface TaskDashboardProps {
+  tasks: TaskType[];
+  onDelete: (id: string) => void;
+  setTaskCompletion: (id: string, completed: boolean) => void;
+}
+
+const TaskDashboard = ({
+  tasks,
+  onDelete,
+  setTaskCompletion,
+}: TaskDashboardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -18,7 +29,11 @@ const TaskDashboard = () => {
         </Button>
       </div>
       <div className="mt-10">
-        <TaskList />
+        <TaskList
+          tasks={tasks}
+          onDelete={onDelete}
+          setTaskCompletion={setTaskCompletion}
+        />
       </div>
     </>
   );

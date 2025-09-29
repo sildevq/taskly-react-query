@@ -2,12 +2,14 @@ import type { TaskType } from "@/types";
 import { Card, CardContent } from "./ui/card";
 import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
-import { ChevronRight, Flag, Trash2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Flag, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import type { CheckedState } from "@radix-ui/react-checkbox";
 
 type TaskItemProps = TaskType & {
   onDelete: (id: string) => void;
+  setTaskCompletion: (id: string, completed: boolean) => void;
 };
 
 const TaskItem = ({
@@ -17,6 +19,7 @@ const TaskItem = ({
   priority,
   completed,
   onDelete,
+  setTaskCompletion,
 }: TaskItemProps) => {
   const PRIORITY_COLORS: Record<string, string> = {
     high: "text-destructive",
@@ -26,19 +29,23 @@ const TaskItem = ({
   };
   const { t } = useTranslation();
 
+  const handleCheck = (checked: CheckedState) => {
+    setTaskCompletion(id, !!checked);
+  };
+
   return (
     <Card className="py-6 shadow-none">
       <CardContent className="flex items-center gap-4">
         <Checkbox
           checked={completed}
-          onCheckedChange={(checked) => console.log(checked)}
+          onCheckedChange={handleCheck}
           className="size-6 rounded-full cursor-pointer"
         />
         <Link to={`/task/${id}`} className="flex-1">
           <div className="flex flex-col">
             <span className="text-sm sm:text-xl font-medium">{title}</span>
             <span className="text-sm sm:text-base text-muted-foreground ">
-              {t("tasks.dueDate")}: {dueDate}
+              {t("tasks.dueDate")}: {dueDate ? dueDate : "-"}
             </span>
           </div>
         </Link>

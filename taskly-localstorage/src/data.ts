@@ -1,6 +1,6 @@
 import type { TaskType } from "./types";
 
-export const allTasks: TaskType[] = [
+export const tasksInit: TaskType[] = [
   {
     id: "1",
     title: "Сделать обзор проекта",
