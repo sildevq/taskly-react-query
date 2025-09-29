@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "tasks": "My tasks",
+    "settings": "Settings"
+  },
+  "tasks": {
+    "title": "My tasks",
+    "new": "New task",
+    "dueDate": "Due Date",
+    "filters": {
+      "all": "All",
+      "active": "Active",
+      "completed": "Completed"
+    },
+    "create": {
+      "title": "Add New Task"
+    },
+    "edit": {
+      "title": "Edit Task"
+    },
+    "form": {
+      "taskTitle": "Task Title",
+      "placeholder": "e.g. Design the new dashboard",
+      "dueDate": "Due Date",
+      "pickDate": "Pick a date",
+      "priority": "Priority",
+      "priorities": {
+        "none": "No priority",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "save": "Save Task"
+    }
+  },
+  "task": {
+    "title": "Task Details",
+    "titleDescription": "View and manage the details of this task.",
+    "dueDate": "Due Date",
+    "edit": "Edit",
+    "delete": "Delete",
+    "description": "Description"
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "themeDescription": "Choose your preferred theme",
+    "theme": {
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "language": "Language",
+    "languageDescription": "Select the application language"
+  }
+}
