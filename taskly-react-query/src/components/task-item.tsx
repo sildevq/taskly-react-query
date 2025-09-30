@@ -2,12 +2,12 @@ import type { TaskType } from "@/types";
 import { Card, CardContent } from "./ui/card";
 import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
-import { ChevronRight, Flag, Trash2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Flag, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 type TaskItemProps = TaskType & {
-  onDelete: (id: string) => void;
+  onDelete: () => void;
 };
 
 const TaskItem = ({
@@ -51,7 +51,7 @@ const TaskItem = ({
           <Button
             size={"icon"}
             className={`bg-transparent hover:bg-transparent cursor-pointer text-foreground`}
-            onClick={() => onDelete(id)}
+            onClick={onDelete}
           >
             <Trash2 className="size-4 sm:size-6" />
           </Button>

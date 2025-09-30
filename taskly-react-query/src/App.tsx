@@ -1,6 +1,7 @@
-import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "./context/theme-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Layout from "./components/layout";
 import TaskDashboard from "./pages/task-dashboard";
 import Settings from "./pages/settings";
@@ -29,6 +30,7 @@ const App = () => {
           </Layout>
         </ThemeProvider>
       </HashRouter>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };
