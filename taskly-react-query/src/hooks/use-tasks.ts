@@ -1,69 +1,77 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { taskAPI } from "@/api/tasks";
-import type { TaskType } from "@/types";
+import {
+  createTask,
+  deleteTask,
+  getPaginatedTasks,
+  getTask,
+  getTasks,
+  patchTask,
+} from "@/api/tasks";
+import type { Filter } from "@/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-// Ключи для кэширования
-export const TASK_KEYS = {
-  all: ["tasks"] as const,
-  byId: (id: string) => ["task", id] as const,
-};
-
-// Получение списка задач
-export function useTasksQuery(params: Record<string, string | number> = {}) {
+export function useTasksQuery() {
   return useQuery({
-    queryKey: [TASK_KEYS.all, params],
-    queryFn: () => taskAPI.getTasks(params),
+    queryKey: ["tasks"],
+    queryFn: () => getTasks(),
   });
 }
 
-// Создание задачи
+export function usePaginatedTasksQuery(page: number, filter: Filter) {
+  return useQuery({
+    queryKey: ["tasks", page, filter],
+    queryFn: () => getPaginatedTasks(page, filter),
+  });
+}
+
+export function useTaskQuery(id: string) {
+  return useQuery({
+    queryKey: ["task", id],
+    queryFn: () => getTask(id),
+    enabled: !!id,
+  });
+}
+
 export function useCreateTask() {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: (task: Partial<TaskType>) => taskAPI.createTask(task),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TASK_KEYS.all });
+    mutationFn: createTask,
+    onSuccess: (task) => {
+      queryClient.setQueryData(["task", task.id], task);
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 }
 
-// Удаление задачи
 export function useDeleteTask() {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: (id: string) => taskAPI.deleteTask(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: TASK_KEYS.all });
+    mutationFn: deleteTask,
+    // 1 параметр - data (ответ от сервера после выполнения запроса), 2 параметр - используемые параметры deleteTask, т.е. только id
+    onSuccess: (_, id) => {
+      queryClient.removeQueries({ queryKey: ["task", id] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 }
 
-// Обновление задачи (PUT)
-export function useUpdateTask() {
-  const queryClient = useQueryClient();
+// export function useUpdateTask() {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: updateTask,
+//     onSuccess: (task) => {
+//       queryClient.setQueryData(["task", task.id], task);
+//       queryClient.invalidateQueries({ queryKey: ["tasks"] });
+//     },
+//   });
+// }
 
-  return useMutation({
-    mutationFn: ({ id, task }: { id: string; task: Partial<TaskType> }) =>
-      taskAPI.updateTask(id, task),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: TASK_KEYS.byId(variables.id) });
-      queryClient.invalidateQueries({ queryKey: TASK_KEYS.all });
-    },
-  });
-}
-
-// Частичное обновление задачи (PATCH)
 export function usePatchTask() {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: ({ id, patch }: { id: string; patch: Partial<TaskType> }) =>
-      taskAPI.patchTask(id, patch),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: TASK_KEYS.byId(variables.id) });
-      queryClient.invalidateQueries({ queryKey: TASK_KEYS.all });
+    mutationFn: patchTask,
+    onSuccess: (task) => {
+      queryClient.setQueryData(["task", task.id], task);
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
 }

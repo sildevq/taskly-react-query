@@ -1,13 +1,33 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useTask } from "@/hooks/use-task";
+import { useDeleteTask, usePatchTask } from "@/hooks/use-tasks";
+import type { CheckedState } from "@radix-ui/react-checkbox";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Task = () => {
   const { t } = useTranslation();
-  const { id } = useParams();
   const navigate = useNavigate();
+
+  const patchTaskMutation = usePatchTask();
+  const deleteTaskMutation = useDeleteTask();
+
+  const { data: task } = useTask();
+  if (!task) return null;
+
+  const handleCheck = (checked: CheckedState) => {
+    patchTaskMutation.mutate({
+      id: task.id,
+      data: { completed: checked === true },
+    });
+  };
+
+  const handleDelete = () => {
+    deleteTaskMutation.mutate(task.id);
+    navigate("/");
+  };
 
   return (
     <>
@@ -18,32 +38,34 @@ const Task = () => {
           <div className="flex justify-between">
             <div className="flex items-center gap-4">
               <Checkbox
-                checked={false}
-                onCheckedChange={(checked) => console.log(checked)}
+                checked={task.completed}
+                onCheckedChange={handleCheck}
                 className="size-6 rounded-full cursor-pointer"
               />
               <div className="flex-1">
-                <span className="font-bold text-sm sm:text-2xl">title</span>
+                <span className="font-bold text-sm sm:text-2xl">
+                  {task.title}
+                </span>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <Button
-                onClick={() => navigate(`/task/${id}/edit`)}
+                onClick={() => navigate(`/task/${task.id}/edit`)}
                 variant={"secondary"}
               >
                 {t("task.edit")}
               </Button>
-              <Button>{t("task.delete")}</Button>
+              <Button onClick={handleDelete}>{t("task.delete")}</Button>
             </div>
           </div>
           <div className="mt-6">
             <span className="text-sm sm:text-base text-muted-foreground">
-              {t("task.dueDate")}: dueDate
+              {t("task.dueDate")}: {task.dueDate}
             </span>
           </div>
           <div className="mt-8">
             <h3 className="text-xl font-bold">{t("task.description")}</h3>
-            <p className="mt-6">description</p>
+            <p className="mt-6">{task.description}</p>
           </div>
         </CardContent>
       </Card>

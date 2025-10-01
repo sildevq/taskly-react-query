@@ -1,118 +1,6 @@
 {
   "tasks": [
     {
-      "id": "8",
-      "title": "Проверка багов",
-      "description": "Проверить открытые баги и обновить статусы.",
-      "dueDate": "2025-09-26",
-      "priority": "high",
-      "completed": true
-    },
-    {
-      "id": "9",
-      "title": "Настройка CI/CD",
-      "description": "Добавить шаги сборки и тестирования.",
-      "dueDate": "2025-10-06",
-      "priority": "medium",
-      "completed": false
-    },
-    {
-      "id": "17",
-      "title": "Сбор обратной связи",
-      "description": "Отправить форму пользователям и собрать отзывы.",
-      "dueDate": "2025-09-30",
-      "priority": "low",
-      "completed": true
-    },
-    {
-      "id": "18",
-      "title": "Подготовка отчета KPI",
-      "description": "Собрать ключевые показатели и оформить отчет.",
-      "dueDate": "2025-10-03",
-      "priority": "medium",
-      "completed": false
-    },
-    {
-      "id": "19",
-      "title": "Обновление логики поиска",
-      "description": "Добавить фильтры и ускорить поиск по базе данных.",
-      "dueDate": "2025-10-06",
-      "priority": "high",
-      "completed": false
-    },
-    {
-      "id": "20",
-      "title": "Резервное копирование данных",
-      "description": "Создать резервные копии всех проектов.",
-      "dueDate": "2025-10-01",
-      "priority": "none",
-      "completed": true
-    },
-    {
-      "id": "21",
-      "title": "Разработка нового компонента",
-      "description": "Создать компонент для отображения карточек задач.",
-      "dueDate": "2025-10-07",
-      "priority": "medium",
-      "completed": false
-    },
-    {
-      "id": "22",
-      "title": "Обновление README",
-      "description": "Добавить инструкции по запуску проекта.",
-      "dueDate": "2025-09-29",
-      "priority": "low",
-      "completed": true
-    },
-    {
-      "id": "23",
-      "title": "Тестирование API",
-      "description": "Проверить все эндпоинты на корректность.",
-      "dueDate": "2025-10-04",
-      "priority": "high",
-      "completed": false
-    },
-    {
-      "id": "24",
-      "title": "Оптимизация изображений",
-      "description": "Сжать изображения для ускорения загрузки.",
-      "dueDate": "2025-10-03",
-      "priority": "medium",
-      "completed": true
-    },
-    {
-      "id": "25",
-      "title": "Добавление логирования",
-      "description": "Добавить логирование ошибок и событий.",
-      "dueDate": "2025-10-05",
-      "priority": "low",
-      "completed": false
-    },
-    {
-      "id": "26",
-      "title": "Проверка безопасности",
-      "description": "Проверить сайт на уязвимости.",
-      "dueDate": "2025-10-06",
-      "priority": "high",
-      "completed": false
-    },
-    {
-      "id": "27",
-      "title": "Создание скриптов миграции",
-      "description": "Написать скрипты для обновления базы данных.",
-      "dueDate": "2025-10-07",
-      "priority": "medium",
-      "completed": false
-    },
-    {
-      "id": "28",
-      "title": "Поддержка пользователей",
-      "description": "Ответить на запросы пользователей.",
-      "dueDate": "2025-09-28",
-      "priority": "low",
-      "completed": true
-    },
-    {
       "id": "29",
       "title": "Обновление лицензий",
       "description": "Проверить и обновить лицензии всех пакетов.",
@@ -137,20 +25,12 @@
       "completed": true
     },
     {
-      "id": "32",
-      "title": "Добавление тестов компонентов",
-      "description": "Покрыть тестами новые компоненты.",
-      "dueDate": "2025-10-05",
-      "priority": "medium",
-      "completed": false
-    },
-    {
       "id": "33",
       "title": "Настройка вебхуков",
       "description": "Подключить вебхуки для уведомлений.",
       "dueDate": "2025-10-06",
       "priority": "high",
-      "completed": false
+      "completed": true
     },
     {
       "id": "34",
@@ -174,22 +54,6 @@
       "description": "Тестировать сайт в разных браузерах.",
       "dueDate": "2025-10-03",
       "priority": "low",
-      "completed": false
-    },
-    {
-      "id": "37",
-      "title": "Документация API",
-      "description": "Обновить документацию для разработчиков.",
-      "dueDate": "2025-10-07",
-      "priority": "medium",
-      "completed": false
-    },
-    {
-      "id": "38",
-      "title": "Обновление зависимостей сервера",
-      "description": "Обновить версии Node и пакетов.",
-      "dueDate": "2025-10-01",
-      "priority": "high",
       "completed": false
     },
     {
@@ -241,14 +105,6 @@
       "completed": false
     },
     {
-      "id": "45",
-      "title": "Проверка интеграций",
-      "description": "Убедиться, что все внешние сервисы работают.",
-      "dueDate": "2025-10-05",
-      "priority": "high",
-      "completed": false
-    },
-    {
       "id": "46",
       "title": "Обновление README проекта",
       "description": "Добавить инструкции по деплою и сборке.",
@@ -278,7 +134,7 @@
       "description": "Добавить возможность переключения светлой/темной темы.",
       "dueDate": "2025-10-07",
       "priority": "medium",
-      "completed": false
+      "completed": true
     },
     {
       "id": "50",
@@ -287,6 +143,21 @@
       "dueDate": "2025-10-05",
       "priority": "high",
       "completed": false
+    },
+    {
+      "id": "a9df616b-3f92-420b-984f-b86ffa03604c",
+      "completed": false,
+      "title": "fasfas",
+      "description": "weqewq",
+      "priority": "low"
+    },
+    {
+      "id": "84950c40-343b-4184-8143-f0bde7c66ec0",
+      "completed": false,
+      "title": "afsafsfaseqw",
+      "dueDate": "2025-10-14",
+      "description": "sadasdasd",
+      "priority": "medium"
     }
   ]
 }

@@ -5,19 +5,15 @@ import { Button } from "./ui/button";
 import { Flag, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { usePatchTask } from "@/hooks/use-tasks";
+import type { CheckedState } from "@radix-ui/react-checkbox";
 
-type TaskItemProps = TaskType & {
+type TaskItemProps = {
+  task: TaskType;
   onDelete: () => void;
 };
 
-const TaskItem = ({
-  id,
-  title,
-  dueDate,
-  priority,
-  completed,
-  onDelete,
-}: TaskItemProps) => {
+const TaskItem = ({ task, onDelete }: TaskItemProps) => {
   const PRIORITY_COLORS: Record<string, string> = {
     high: "text-destructive",
     medium: "text-warning",
@@ -26,26 +22,32 @@ const TaskItem = ({
   };
   const { t } = useTranslation();
 
+  const patchTaskMutation = usePatchTask();
+
+  const handleCheck = (checked: CheckedState) => {
+    patchTaskMutation.mutate({ id: task.id, data: { completed: checked === true } });
+  };
+
   return (
     <Card className="py-6 shadow-none">
       <CardContent className="flex items-center gap-4">
         <Checkbox
-          checked={completed}
-          onCheckedChange={(checked) => console.log(checked)}
+          checked={task.completed}
+          onCheckedChange={handleCheck}
           className="size-6 rounded-full cursor-pointer"
         />
-        <Link to={`/task/${id}`} className="flex-1">
+        <Link to={`/task/${task.id}`} className="flex-1">
           <div className="flex flex-col">
-            <span className="text-sm sm:text-xl font-medium">{title}</span>
+            <span className="text-sm sm:text-xl font-medium">{task.title}</span>
             <span className="text-sm sm:text-base text-muted-foreground ">
-              {t("tasks.dueDate")}: {dueDate}
+              {t("tasks.dueDate")}: {task.dueDate}
             </span>
           </div>
         </Link>
         <div className="flex items-center gap-4 sm:gap-6">
           <Flag
             className={`size-4 sm:size-6 ${
-              PRIORITY_COLORS[priority] ?? PRIORITY_COLORS.none
+              PRIORITY_COLORS[task.priority] ?? PRIORITY_COLORS.none
             }`}
           />
           <Button

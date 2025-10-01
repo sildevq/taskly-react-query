@@ -1,75 +1,96 @@
-import type { TaskType } from "@/types";
+import axios from "axios";
+
+import type { Filter, PaginatedResponse, TaskType } from "@/types";
 import { API_CONFIG } from "./config";
+import { v4 as uuidV4 } from "uuid";
 
-class TaskAPI {
-  private createUrl(
-    endpoint: string,
-    params: Record<string, string | number> = {}
-  ) {
-    const searchParams = new URLSearchParams(
-      Object.entries(params).map(([key, value]) => [key, String(value)])
-    );
-    return `${endpoint}?${searchParams.toString()}`;
-  }
-
-  private async request<T>(url: string, options: RequestInit = {}): Promise<T> {
-    const response = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-      ...options,
-    });
-
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status} ${response.statusText}`);
-    }
-
-    // если ответ пустой (например, у DELETE часто бывает 204 No Content)
-    if (response.status === 204) {
-      return null as T;
-    }
-
-    return response.json();
-  }
-
-  // GET
-  async getTasks(
-    params: Record<string, string | number> = {}
-  ): Promise<TaskType[]> {
-    const url = this.createUrl(`${API_CONFIG.BASE_URL}/tasks`, params);
-    return this.request<TaskType[]>(url, { method: "GET" });
-  }
-
-  // POST
-  async createTask(task: Partial<TaskType>): Promise<TaskType> {
-    const url = `${API_CONFIG.BASE_URL}/tasks`;
-    return this.request<TaskType>(url, {
-      method: "POST",
-      body: JSON.stringify(task),
-    });
-  }
-
-  // DELETE
-  async deleteTask(id: string): Promise<null> {
-    const url = `${API_CONFIG.BASE_URL}/tasks/${id}`;
-    return this.request<null>(url, { method: "DELETE" });
-  }
-
-  // PUT (обновление полностью)
-  async updateTask(id: string, task: Partial<TaskType>): Promise<TaskType> {
-    const url = `${API_CONFIG.BASE_URL}/tasks/${id}`;
-    return this.request<TaskType>(url, {
-      method: "PUT",
-      body: JSON.stringify(task),
-    });
-  }
-
-  // PATCH (обновление частично)
-  async patchTask(id: string, patch: Partial<TaskType>): Promise<TaskType> {
-    const url = `${API_CONFIG.BASE_URL}/tasks/${id}`;
-    return this.request<TaskType>(url, {
-      method: "PATCH",
-      body: JSON.stringify(patch),
-    });
-  }
+// GET
+export function getTasks(): Promise<TaskType[]> {
+  console.log("All tasks");
+  const url = `${API_CONFIG.BASE_URL}/tasks`;
+  return axios.get(url).then((res) => res.data);
 }
 
-export const taskAPI = new TaskAPI();
+export async function getPaginatedTasks(
+  page: number,
+  filter: Filter = "all",
+  limit = 5
+): Promise<PaginatedResponse<TaskType>> {
+  console.log("Paginated tasks");
+
+  const url = `${API_CONFIG.BASE_URL}/tasks`;
+  const params: Record<string, string | number | boolean> = {
+    _page: page,
+    _limit: limit,
+  };
+
+  if (filter === "active") {
+    params.completed = false;
+  } else if (filter === "completed") {
+    params.completed = true;
+  }
+
+  const res = await axios.get(url, { params });
+
+  const totalItems = parseInt(res.headers["x-total-count"], 10);
+  const totalPages = Math.ceil(totalItems / limit);
+
+  return {
+    first: 1,
+    prev: page > 1 ? page - 1 : null,
+    next: page < totalPages ? page + 1 : null,
+    last: totalPages,
+    pages: totalPages,
+    items: totalItems,
+    data: res.data as TaskType[],
+  };
+}
+
+export function getTask(id: string): Promise<TaskType> {
+  console.log("Task");
+  const url = `${API_CONFIG.BASE_URL}/tasks/${id}`;
+  return axios.get(url).then((res) => res.data);
+}
+
+// POST
+export function createTask(
+  data: Omit<TaskType, "id" | "completed">
+): Promise<TaskType> {
+  console.log("Create task");
+  const newTask: TaskType = { id: uuidV4(), ...data, completed: false };
+  const url = `${API_CONFIG.BASE_URL}/tasks`;
+  return axios.post(url, newTask).then((res) => res.data);
+}
+
+// DELETE
+export function deleteTask(id: string): Promise<void> {
+  console.log("Delete task");
+  const url = `${API_CONFIG.BASE_URL}/tasks/${id}`;
+  return axios.delete(url).then(() => {});
+}
+
+// // PUT
+// export function updateTask({
+//   id,
+//   data,
+// }: {
+//   id: string;
+//   data: Omit<TaskType, "id" | "completed">;
+// }): Promise<TaskType> {
+//   console.log("Update task");
+//   const url = `${API_CONFIG.BASE_URL}/tasks/${id}`;
+//   return axios.put(url, data).then((res) => res.data);
+// }
+
+// PATCH
+export function patchTask({
+  id,
+  data,
+}: {
+  id: string;
+  data: Partial<TaskType>;
+}): Promise<TaskType> {
+  console.log("Patch task");
+  const url = `${API_CONFIG.BASE_URL}/tasks/${id}`;
+  return axios.patch(url, data).then((res) => res.data);
+}
